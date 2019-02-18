@@ -4,25 +4,26 @@
  * and open the template in the editor.
  */
 package Main;
-import javax.validation.Constraint.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.sql.*;
-import javax.swing.JLabel;
-import javax.swing.JPasswordField;
+
+import java.util.Arrays;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import org.hibernate.validator.constraints.Length;
+
 /**
  *
  * @author yashtalegaonkar
  */
 public class loginForm extends javax.swing.JFrame {
 
-    /**
+    
+    
+     /**
      * Creates new form mainForm
      */
     public loginForm() {
         initComponents();
+        
+       
     }
 
     /**
@@ -39,7 +40,6 @@ public class loginForm extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         password = new javax.swing.JPasswordField();
-        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -60,8 +60,6 @@ public class loginForm extends javax.swing.JFrame {
             }
         });
 
-        password.setText("jPasswordField1");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -79,16 +77,13 @@ public class loginForm extends javax.swing.JFrame {
                             .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(251, 251, 251)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(222, 222, 222)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jButton1)))
                 .addContainerGap(197, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(118, Short.MAX_VALUE)
+                .addContainerGap(129, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -96,9 +91,7 @@ public class loginForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(67, 67, 67)
                 .addComponent(jButton1)
                 .addGap(94, 94, 94))
         );
@@ -112,13 +105,13 @@ public class loginForm extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        validateLogin validateLogin = new validateLogin();
-       
-        validateLogin.validLogin();
+        callback();
         
-     
+        JOptionPane.showMessageDialog(null,getUsername());
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
+   
     /**
      * @param args the command line arguments
      */
@@ -148,10 +141,8 @@ public class loginForm extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new loginForm().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new loginForm().setVisible(true);
         });
     }
 
@@ -159,33 +150,27 @@ public class loginForm extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JPasswordField password;
     private javax.swing.JTextField username;
     // End of variables declaration//GEN-END:variables
 
-    public javax.swing.JPasswordField getPassword() {
-        return password;
+    
+    public void callback(){
+        validateLogin validateLogin = new validateLogin();
+       
+        validateLogin.validLogin();
+    }
+    public String getPassword() {
+        return Arrays.toString(password.getPassword());
     }
 
-    public void setPassword(javax.swing.JPasswordField password) {
-        this.password = password;
+    public void setUsername(String user) {
+        this.username.setText(user); 
     }
 
-    public javax.swing.JTextField getUsername() {
-        return username;
+    public String getUsername() {
+        return username.getText();
+        
     }
-
-    public void setUsername(javax.swing.JTextField username) {
-        this.username = username;
-    }
-
-   
-
-  
-    
-    
-    
-    
     
 }

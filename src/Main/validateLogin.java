@@ -5,28 +5,33 @@
  */
 package Main;
 
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import jdk.internal.util.StaticProperty;
-
 /**s
  *
  * @author yashtalegaonkar
  */
 public class validateLogin {
 
+   
     public validateLogin() {
-        
+        System.out.println("In ValidLogin Constructor");
+         loginForm loginForm = new loginForm();
        
+            System.out.println(loginForm.getUsername());
        
     }
     
+       
     public void validLogin(){
-        loginForm mainForm = new loginForm();
         
-          
-   
+       
+        
+        
+      
+       
     }
+    
+    
+    
     
   // private static final Logger LOG = Logger.getLogger(validateLogin.class.getName());
  
