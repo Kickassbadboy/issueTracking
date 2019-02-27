@@ -105,8 +105,10 @@ public class loginForm extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        callback();
-        
+        //callback();
+        String name= username.getText();
+        String pass =password.getText();
+        validateLogin v= new validateLogin(name, pass);
         JOptionPane.showMessageDialog(null,getUsername());
         
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -155,11 +157,7 @@ public class loginForm extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     
-    public void callback(){
-        validateLogin validateLogin = new validateLogin();
-       
-        validateLogin.validLogin();
-    }
+    
     public String getPassword() {
         return Arrays.toString(password.getPassword());
     }

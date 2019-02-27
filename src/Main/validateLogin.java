@@ -11,19 +11,21 @@ package Main;
  */
 public class validateLogin {
 
+    String name, pass;
+    
    
-    public validateLogin() {
+    public validateLogin(String name, String pass) {
+        this.name=name;
+        this.pass=pass;
+        
         System.out.println("In ValidLogin Constructor");
          loginForm loginForm = new loginForm();
        
-            System.out.println(loginForm.getUsername());
+            System.out.println(name +pass);
        
     }
     
-       
-    public void validLogin(){
-        
-       
+      
         
         
       
