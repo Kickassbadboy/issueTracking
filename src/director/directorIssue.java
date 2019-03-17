@@ -5,7 +5,18 @@
  */
 package director;
 
+import Main.dashBoardForm;
+import Main.issues;
 import accountsDepartment.*;
+import administrationDepartment.administratorIssue;
+import facultyDepartment.facultyIssue;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -18,8 +29,66 @@ public class directorIssue extends javax.swing.JFrame {
      */
     public directorIssue() {
         initComponents();
+        showDirectorData();
     }
 
+    
+    
+    public ArrayList<issues> issueList(){
+       ArrayList<issues>issueList = new ArrayList<>();
+        Connection conn = null;
+        Statement stmt = null;
+        try{
+      //STEP 2: Register JDBC driverz
+      Class.forName("com.mysql.jdbc.Driver");
+
+      //STEP 3: Open a connection
+      System.out.println("Connecting to database...");
+      conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/issueTrackingSystem","root","ac0de52dh");
+      
+      issues issue;
+      String sql = "select * from issues where issueauth='Director'";
+      //STEP 4: Execute a query
+      stmt =conn.createStatement();
+      ResultSet rs = stmt.executeQuery(sql);
+      int i =0;
+      while(rs.next()){
+         
+        issue = new issues(rs.getString(1),rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8));
+        issueList.add(issue);
+      }
+        
+        
+        }catch(ClassNotFoundException | SQLException e){
+            System.out.println(e);
+        }
+        
+        
+        return issueList;
+        
+    }
+    
+    
+    
+    private void showDirectorData(){
+         ArrayList<issues> list = issueList();
+         
+         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+         Object[] row = new Object[6];
+         
+         
+         for(int i=0;i<list.size();i++){
+             row[0]=list.get(i).getRandomID();
+             row[1]=list.get(i).getRefno();
+             row[2]=list.get(i).getIssuename();
+             row[3]=list.get(i).getPriority();
+             row[4]=list.get(i).getTicket();
+             row[5]=list.get(i).getInprogress();
+            // row[2]=list
+             model.addRow(row);
+             System.out.print(issueList().get(i).getName());
+         }
+     }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -29,42 +98,38 @@ public class directorIssue extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        jToggleButton1 = new javax.swing.JToggleButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
-        jToggleButton2 = new javax.swing.JToggleButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        menuBar = new javax.swing.JMenuBar();
+        fileMenu = new javax.swing.JMenu();
+        editMenu = new javax.swing.JMenu();
+        pasteMenuItem = new javax.swing.JMenuItem();
+        cutMenuItem = new javax.swing.JMenuItem();
+        copyMenuItem = new javax.swing.JMenuItem();
+        deleteMenuItem = new javax.swing.JMenuItem();
+        helpMenu = new javax.swing.JMenu();
+        contentsMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jTable1.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"1", "Computer Damage", "50384038403"},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "SrNo", "Issue's", "Track ID"
-            }
-        ));
-        jTable1.setRowMargin(2);
-        jScrollPane1.setViewportView(jTable1);
 
         jLabel1.setText("Director Department Issue Management");
 
         jLabel2.setText("Please Select the above Issue ");
 
         jButton1.setText("Resolved");
-
-        jToggleButton1.setText("In-Progress");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -72,7 +137,111 @@ public class directorIssue extends javax.swing.JFrame {
 
         jLabel3.setText("Description");
 
-        jToggleButton2.setText("Ticket");
+        jTable1.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "UniqueID", "RefNo", "Issue Name", "Issue Priority", "Ticketed", "In Progress"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                true, false, false, false, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.setRowHeight(20);
+        jTable1.setRowMargin(2);
+        jScrollPane1.setViewportView(jTable1);
+
+        jButton2.setText("Ticket");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("Resolved");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        fileMenu.setMnemonic('f');
+        fileMenu.setText("Home");
+        fileMenu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                fileMenuMouseClicked(evt);
+            }
+        });
+        fileMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fileMenuActionPerformed(evt);
+            }
+        });
+        menuBar.add(fileMenu);
+
+        editMenu.setMnemonic('e');
+        editMenu.setText("Issues");
+
+        pasteMenuItem.setMnemonic('p');
+        pasteMenuItem.setText("Director");
+        pasteMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pasteMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(pasteMenuItem);
+
+        cutMenuItem.setMnemonic('t');
+        cutMenuItem.setText("Administrator");
+        cutMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cutMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(cutMenuItem);
+
+        copyMenuItem.setMnemonic('y');
+        copyMenuItem.setText("Account");
+        copyMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                copyMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(copyMenuItem);
+
+        deleteMenuItem.setMnemonic('d');
+        deleteMenuItem.setText("Faculty");
+        deleteMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(deleteMenuItem);
+
+        menuBar.add(editMenu);
+
+        helpMenu.setMnemonic('h');
+        helpMenu.setText("Reports");
+
+        contentsMenuItem.setMnemonic('c');
+        contentsMenuItem.setText("Generate Report");
+        contentsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                contentsMenuItemActionPerformed(evt);
+            }
+        });
+        helpMenu.add(contentsMenuItem);
+
+        menuBar.add(helpMenu);
+
+        setJMenuBar(menuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -88,9 +257,11 @@ public class directorIssue extends javax.swing.JFrame {
                                     .addComponent(jLabel1)
                                     .addComponent(jLabel2)))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(239, 239, 239)
-                                .addComponent(jToggleButton1)
-                                .addGap(31, 31, 31)
+                                .addGap(152, 152, 152)
+                                .addComponent(jButton2)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton3)
+                                .addGap(18, 18, 18)
                                 .addComponent(jButton1)
                                 .addGap(24, 24, 24)
                                 .addComponent(jLabel3)
@@ -101,38 +272,91 @@ public class directorIssue extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jScrollPane1)))
                 .addContainerGap())
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(119, 119, 119)
-                    .addComponent(jToggleButton2)
-                    .addContainerGap(639, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(5, 5, 5)
+                .addGap(11, 11, 11)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 398, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2)
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jToggleButton1)
                         .addComponent(jButton1)
-                        .addComponent(jLabel3))
+                        .addComponent(jLabel3)
+                        .addComponent(jButton2)
+                        .addComponent(jButton3))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(31, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(487, Short.MAX_VALUE)
-                    .addComponent(jToggleButton2)
-                    .addGap(86, 86, 86)))
+                .addContainerGap(9, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void fileMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileMenuActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fileMenuActionPerformed
+
+    private void pasteMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteMenuItemActionPerformed
+        // TODO add your handling code here:
+        director.directorIssue dirissue = new directorIssue();
+        dirissue.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_pasteMenuItemActionPerformed
+
+    private void cutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cutMenuItemActionPerformed
+        // TODO add your handling code here:
+        administrationDepartment.administratorIssue admin = new administratorIssue();
+        admin.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_cutMenuItemActionPerformed
+
+    private void copyMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyMenuItemActionPerformed
+        // TODO add your handling code here:
+        accountIssue ac = new accountIssue();
+        ac.setVisible(true);
+        this.dispose(); 
+    }//GEN-LAST:event_copyMenuItemActionPerformed
+
+    private void deleteMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteMenuItemActionPerformed
+        // TODO add your handling code here:
+        facultyDepartment.facultyIssue faculty = new facultyIssue();
+        faculty.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_deleteMenuItemActionPerformed
+
+    private void contentsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contentsMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_contentsMenuItemActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        int a=jTable1.getSelectedRow();
+        System.out.println(a);
+        
+        jTable1.setValueAt("Ticketed", a,3);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+         int a=jTable1.getSelectedRow();
+        System.out.println(a);
+        
+        jTable1.setValueAt("In Progress", a,4);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void fileMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fileMenuMouseClicked
+        // TODO add your handling code here:
+        dashBoardForm dashboard = new dashBoardForm();
+        dashboard.setVisible(true);
+    }//GEN-LAST:event_fileMenuMouseClicked
 
     /**
      * @param args the command line arguments
@@ -171,7 +395,16 @@ public class directorIssue extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem contentsMenuItem;
+    private javax.swing.JMenuItem copyMenuItem;
+    private javax.swing.JMenuItem cutMenuItem;
+    private javax.swing.JMenuItem deleteMenuItem;
+    private javax.swing.JMenu editMenu;
+    private javax.swing.JMenu fileMenu;
+    private javax.swing.JMenu helpMenu;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -179,7 +412,7 @@ public class directorIssue extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JToggleButton jToggleButton1;
-    private javax.swing.JToggleButton jToggleButton2;
+    private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem pasteMenuItem;
     // End of variables declaration//GEN-END:variables
 }

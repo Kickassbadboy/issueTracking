@@ -46,6 +46,8 @@ public class signUpStudentForm extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jTextField5 = new javax.swing.JTextField();
+        menuBar = new javax.swing.JMenuBar();
+        fileMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -77,6 +79,26 @@ public class signUpStudentForm extends javax.swing.JFrame {
         });
 
         jLabel4.setText("Password");
+
+        fileMenu.setMnemonic('f');
+        fileMenu.setText("Home");
+        fileMenu.addMenuListener(new javax.swing.event.MenuListener() {
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                fileMenuMenuSelected(evt);
+            }
+        });
+        fileMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fileMenuActionPerformed(evt);
+            }
+        });
+        menuBar.add(fileMenu);
+
+        setJMenuBar(menuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -133,12 +155,16 @@ public class signUpStudentForm extends javax.swing.JFrame {
                 .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31)
                 .addComponent(jButton2)
-                .addContainerGap(63, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
+   
+        
+        
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:ew
          this.jTextField4.setVisible(true);
@@ -147,30 +173,46 @@ public class signUpStudentForm extends javax.swing.JFrame {
         Random dr = new Random();
         String otpgen =Integer.toString(1000 + dr.nextInt(9999));
        String number2= jTextField2.getText();
+       String name = jTextField1.getText();
+       String prno = jTextField3.getText();
       sendSMS sms = new sendSMS();
-      sms.sendSms(otpgen,number2);
-     
+      System.out.print(otpgen);
+     sms.sendSms(otpgen,number2,name,prno);
+     setotp(otpgen);
       
       
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        checkotp(otp);
+        
+        checkotp(getOtp1());
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField4ActionPerformed
 
+    private void fileMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileMenuActionPerformed
+        // TODO add your handling code here:
+        dashBoardForm dash=new dashBoardForm();
+        dash.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_fileMenuActionPerformed
+
+    private void fileMenuMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_fileMenuMenuSelected
+        // TODO add your handling code here:
+        dashBoardForm dash=new dashBoardForm();
+        dash.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_fileMenuMenuSelected
+
     
     String name,number,refno,password;
     
-    void addStudent(String name ,String number, String refno,String password){
-        this.name =name;
-        this.number=number;
-        this.refno= refno;
-        this.password =password;
+    void addStudent(){
+        
         
         name = jTextField1.getText();
         number = jTextField2.getText();
@@ -190,7 +232,7 @@ public class signUpStudentForm extends javax.swing.JFrame {
                 //STEP 4: Execute a query
                 System.out.println("Creating statement...");
                 String sql;
-                sql = "insert into issues values(?,?,?,)";
+                sql = "insert into issues values(?,?,?,?,?)";
                 pstmt = conn.prepareStatement(sql);
                 generateId gid = new generateId();
                 String getterId = gid.generateRandomId();
@@ -255,6 +297,7 @@ public class signUpStudentForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu fileMenu;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
@@ -266,16 +309,41 @@ public class signUpStudentForm extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
+    private javax.swing.JMenuBar menuBar;
     // End of variables declaration//GEN-END:variables
 
-    String otp;
-    private void checkotp(String otp) {
-      this.otp=otp;
+   
+    
+
+    private void hideme() {
+        
+        jTextField4.setVisible(false);
+        
+        }
+     String otp1;
+    private void setotp(String otpgen) {
+   
+    this.otp1=otpgen;
+    
+    }
+
+    public String getOtp1() {
+        return otp1;
+    }
+    
+    
+    
+    
+    
+    private void checkotp(String otp1) {
+      //this.otp1=otp;
       
      String recievedOtp = jTextField4.getText();
-     if(recievedOtp.equals(otp))
+     if(recievedOtp.equals(otp1))
      {
+         
          JOptionPane.showMessageDialog(null,"Registered Successfully");
+         addStudent();
      }         
         
      else
@@ -283,10 +351,5 @@ public class signUpStudentForm extends javax.swing.JFrame {
          JOptionPane.showMessageDialog(null,"OTP is Invalid");
      }
          }
-
-    private void hideme() {
-        
-        jTextField4.setVisible(false);
-        
-        }
+    
 }

@@ -17,15 +17,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
  
 public class sendSMS {
-	public String sendSms() {
+	public String sendSms(String otpmessage,String number,String username,String prno) {
 		try {
 			// Construct data
                        
-                        
-			String apiKey = "apikey=" + "R5yHvvxD/Mw-BuBrrWQrlQeNoG8W0lP3YLSMSEm2hY";
-			String message = "&message=" + "Hello";
+                        System.err.println(otpmessage+""+number);
+			String apiKey = "apikey=" + "uXKaPQ6CHMA-mp1JBmm4wIWmNvxq6IZbZ8qd73UrTz";
+			String message = "&message=" + "Hello "+username+"Confirm your Prno   "+prno+"Your OTP :  "+otpmessage;
+                                
 			String sender = "&sender=" + "TXTLCL";
-			String numbers = "&numbers=" + "918411813257";
+			String numbers = "&numbers=" + number;
 			
 			// Send data
 			HttpURLConnection conn = (HttpURLConnection) new URL("https://api.textlocal.in/send/?").openConnection();

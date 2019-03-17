@@ -5,12 +5,23 @@
  */
 package Main;
 import Main.sendSMS;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author yashtalegaonkar
  */
 public class newIssue extends javax.swing.JFrame {
+    
+   
 
     /**
      * Creates new form newIssue
@@ -24,6 +35,8 @@ public class newIssue extends javax.swing.JFrame {
         initComponents();
     }
 
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -92,7 +105,7 @@ public class newIssue extends javax.swing.JFrame {
 
         jLabel7.setText("Issue Type");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Damage", "Grades", "Monetary", "Leave" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -101,11 +114,11 @@ public class newIssue extends javax.swing.JFrame {
 
         jLabel8.setText("Issue Priority");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "High", "Medium", "Low" }));
 
         jLabel9.setText("Authority");
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Accounts", "Administrator", "Faculty", "Director" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -122,9 +135,9 @@ public class newIssue extends javax.swing.JFrame {
                                     .addComponent(jLabel3)
                                     .addComponent(jLabel2))
                                 .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                                    .addComponent(jTextField2)))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(41, 41, 41)
                         .addComponent(jLabel4))
@@ -218,9 +231,19 @@ public class newIssue extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        generateId gid = new generateId();
+    //    gid.generateRandomId();
         
-        new sendSMS().sendSms();
+       // String randomNumber = gid.generateRandomId();
+        try {
+            // TODO add your handling code here:
+            
+            
+            
+            dbConn();
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(newIssue.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -287,5 +310,76 @@ public class newIssue extends javax.swing.JFrame {
 
     private void sendSMS() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void dbConn() throws ClassNotFoundException, SQLException {
+        String name =jTextField1.getText();
+        String refno = jTextField2.getText();
+        String issuename = jTextField4.getText();
+        String authority = (String)jComboBox3.getSelectedItem();
+        String issuetype = (String)jComboBox1.getSelectedItem();
+        String issuepriority= (String)jComboBox2.getSelectedItem();
+        String description = jTextArea1.getText();
+        
+        
+        
+        if(jTextField1.getText().equals("") && jTextField2.getText().equals("") && jTextField4.getText().equals("") && jTextArea1.getText().equals("")){
+            JOptionPane.showMessageDialog(null,"No Empty Spaces Allowed");
+        }
+        else if(jTextArea1.getText().matches("^[A-Za-z]+$") && jTextField1.getText().matches("^[a-zA-Z]*$")&& jTextField2.getText().matches("^[0-9]*$") && jTextField4.getText().matches("^[a-zA-Z]*$"))
+            
+        {
+
+             Connection conn = null;
+            PreparedStatement pstmt = null;
+            try{
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                Class.forName("com.mysql.jdbc.Driver");
+                
+                //STEP 3: Open a connection
+                System.out.println("Connecting to database...");
+                conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/issueTrackingSystem","root","ac0de52dh");
+                
+                //STEP 4: Execute a query
+                System.out.println("Creating statement...");
+                String sql;
+                sql = "insert into issues values(?,?,?,?,?,?,?,?)";
+                pstmt = conn.prepareStatement(sql);
+                generateId gid = new generateId();
+                String getterId = gid.generateRandomId();
+                
+                
+                pstmt.setString(1,getterId);
+                pstmt.setString(2,issuename);
+                pstmt.setString(3,issuetype);
+                pstmt.setString(4,authority);
+                pstmt.setString(5,issuepriority);
+                pstmt.setString(6,description);
+                pstmt.setString(7,refno);
+                pstmt.setString(8,name);
+                //pstmt.setString(9,name);
+                
+                int i = pstmt.executeUpdate();
+                if (i > 0)
+                {
+                    JOptionPane.showMessageDialog(null, "Your data is successfully added");
+                    System.out.print("added succesfully");
+                }
+                
+//      conn.close();
+//       pstmt.close();
+            }
+            
+            
+            catch(ClassNotFoundException | SQLException e){
+                System.out.println(e);
+                System.err.println(e.getMessage());
+            }
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(null,"IT should be number");
+        }
+   
     }
 }
